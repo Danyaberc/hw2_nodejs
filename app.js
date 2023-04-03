@@ -27,15 +27,41 @@
 const fs = require('fs')
 const http = require('http')
 
+const array = [
+   { id: 1, text: 'TEXTfirstId' },
+   { id: 2, text: 'TEXTsecId' },
+   { id: 3, text: 'TEXTthirId' }
+]
+
+
 const server = http.createServer((req, res) => {
    if (req.url === '/') {
-      res.end('Homepage')
+      let img = fs.readFileSync('./img/homepage.jpg')
+      res.writeHead(200, { 'Content-Type': 'image/jpg' });
+      res.end(img)
+
    } else if (req.url === '/cat') {
-      res.end('Catalog')
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "image/jpeg");
+      fs.readFile('./img/catalog.jpg', (err, image) => {
+         res.end(image);
+      });
    } else if (req.url === '/about') {
-      res.end('About our company')
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "image/jpeg")
+      fs.readFile('./img/about.jpg', (err, image) => {
+         res.end(image)
+      })
    } else {
-      res.end('Page not found 404')
+      fs.readFile('./img/notfound404.jpg', (err, image) => {
+         res.end(image)
+      })
+   }
+   for (let i = 0; i < array.length; i++) {
+      let newarray = array[i].id
+      if (req.url === '/newarray') {
+         res.end(newarray)
+      }
    }
 })
 server.listen(3000)
